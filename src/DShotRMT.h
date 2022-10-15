@@ -26,6 +26,8 @@ constexpr auto F_CPU_RMT = APB_CLK_FREQ;
 constexpr auto RMT_CYCLES_PER_SEC = (F_CPU_RMT / DSHOT_CLK_DIVIDER);
 constexpr auto RMT_CYCLES_PER_ESP_CYCLE = (F_CPU / RMT_CYCLES_PER_SEC);
 
+constexpr auto RX_BUFFER_SIZE = 0;
+
 typedef enum dshot_mode_e {
 	DSHOT_OFF,
 	DSHOT150,
@@ -93,6 +95,7 @@ class DShotRMT {
 
 	dshot_config_t* get_dshot_info();
 	uint8_t* get_dshot_clock_div();
+	static void handle_error(esp_err_t);
 
 	private:
 	rmt_item32_t dshot_tx_rmt_item[DSHOT_PACKET_LENGTH];
@@ -104,4 +107,5 @@ class DShotRMT {
 	uint16_t prepare_rmt_data(const dshot_packet_t& dshot_packet);
 
 	void output_rmt_data(const dshot_packet_t& dshot_packet);
+	static void dshot_switch_to_rx(rmt_channel_t channel, void *arg);
 };
